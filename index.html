@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>ImpulsaSeo</title>
+  <link rel="icon" type="image/png" href="img/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="premium-container">
+  <div class="brand-header">
+    <h1>IMPULSA.SEO PREMIUM</h1>
+  </div>
+
+  <div class="platform-buttons">
+    <div class="platform-btn" data-platform="tiktok" id="btnTikTok"><i class="fab fa-tiktok"></i> TikTok</div>
+    <div class="platform-btn active" data-platform="instagram" id="btnInstagram"><i class="fab fa-instagram"></i> Instagram</div>
+    <div class="platform-btn combo-btn" onclick="openComboModal()"><i class="fas fa-gift"></i> Armar Combo</div>
+  </div>
+
+  <div class="services-list" id="servicesList">
+    <div class="service-item" data-service="seguidores"><i class="fas fa-user-plus"></i> Seguidores</div>
+    <div class="service-item active" data-service="likes"><i class="fas fa-heart"></i> Likes</div>
+    <div class="service-item" data-service="vistas"><i class="fas fa-eye"></i> Vistas</div>
+    <div class="service-item" data-service="comentarios"><i class="fas fa-comment"></i> Comentarios</div>
+  </div>
+
+  <!-- ══ ÚLTIMO COMBO GUARDADO ══ -->
+  <div class="saved-combo-banner" id="savedComboBanner">
+    <div class="scb-live-dot"></div>
+    <div class="scb-icon" id="scbIcon">🎁</div>
+    <div class="scb-name" id="scbName">Combo <span class="scb-plat" id="scbPlat">• Instagram</span></div>
+    <div class="scb-services" id="scbServices"></div>
+    <div class="scb-right">
+      <span class="scb-total-inline">TOTAL</span>
+      <span class="scb-total-val" id="scbTotal">Bs —</span>
+      <div class="scb-discount" id="scbDiscount">0% OFF</div>
+      <button class="scb-remove-btn" onclick="removeCombo()">Quitar combo</button>
+    </div>
+  </div>
+
+  <div class="service-badge-container" id="serviceBadge">
+    <div class="badge-icon likes" id="badgeIcon"><i class="fas fa-heart"></i></div>
+    <div class="badge-text-column">
+      <div class="badge-title" id="badgeTitle">Likes • <span>Instagram</span></div>
+      <div class="badge-description" id="badgeDesc">Interacción en publicaciones</div>
+    </div>
+    <div class="badge-id-tag" id="badgeId">IG-LIK-5350</div>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="params-card">
+      <div class="panel-header">
+        <div class="panel-title-left"><i class="fas fa-calculator"></i> Calculadora</div>
+        <div class="id-tag-badge" id="panelIdBadge">ID #5350</div>
+      </div>
+      <div class="input-row">
+        <input type="number" id="baseCostPerThousand" class="premium-input" step="0.01" placeholder="Costo de 1,000($)">
+      </div>
+      <div class="input-row">
+        <input type="number" id="profitMarginPercent" class="premium-input" step="1" placeholder="% de ganancia">
+      </div>
+      <div class="rate-badge">
+        <span><i class="fas fa-dollar-sign"></i> Tipo de cambio</span>
+        <span><strong>$1 USD = Bs 10.00</strong></span>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header-row">
+          <span class="kpi-label">GANANCIA POR 1,000 $</span>
+          <div class="kpi-percent-badge" id="kpiPercent">+250%</div>
+        </div>
+        <div class="kpi-main-value" id="kpiMainValue">Bs 27</div>
+        <div class="kpi-detail" id="kpiDetail">
+          Costo <span id="detailCost">$1.07</span> → Venta <span id="detailSale">$3.76</span> → Ganancia <span id="detailProfit">$2.69</span>
+        </div>
+      </div>
+    </div>
+    <div class="table-card">
+      <table class="price-table">
+        <thead><tr><th>ID</th><th>CANTIDAD</th><th>COSTO</th><th>USD</th><th>BS</th></tr></thead>
+        <tbody id="priceTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <footer><i class="fab fa-instagram"></i> <i class="fab fa-tiktok"></i> Modo oscuro premium · Selección de filas persistente</footer>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="mh">
+      <div class="mh-icon">
+        <svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+          <line x1="12" y1="12" x2="12" y2="16"/>
+          <line x1="10" y1="14" x2="14" y2="14"/>
+        </svg>
+      </div>
+      <div>
+        <div class="mh-title">Armar Combo</div>
+        <div class="mh-sub">Combina servicios y obtén descuentos automáticos</div>
+      </div>
+      <div class="mh-close" onclick="closeComboModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="mbody">
+      <div class="slbl">⚡ COMBOS RÁPIDOS</div>
+      <div class="preset-grid">
+        <div class="pcard" id="pc0" onclick="loadPreset(0)">
+          <div class="pcard-check">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="pbadge rec">⭐ RECOMENDADO</div>
+          <div class="pcard-top">
+            <div class="pcard-emoji" style="background:rgba(77,159,255,0.15)">🚀</div>
+            <div><div class="pcard-name">Lanzamiento</div><div class="pcard-desc">Ideal para comenzar</div></div>
+          </div>
+          <div class="pcard-svcs" id="ps0svcs">
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#ff3b6e"></div>500 Seguidores</div>
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#ff7043"></div>500 Likes</div>
+          </div>
+          <div class="pcard-foot"><span class="pcard-price" id="pc0price">Bs 45</span><span class="pcard-off" id="pc0off">10% OFF</span></div>
+        </div>
+        <div class="pcard" id="pc1" onclick="loadPreset(1)">
+          <div class="pcard-check">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="pbadge hot">🔥 MÁS VENDIDO</div>
+          <div class="pcard-top">
+            <div class="pcard-emoji" style="background:rgba(255,112,67,0.15)">🔥</div>
+            <div><div class="pcard-name">Viral</div><div class="pcard-desc">El más popular</div></div>
+          </div>
+          <div class="pcard-svcs" id="ps1svcs">
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#ff3b6e"></div>1,000 Seguidores</div>
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#ff7043"></div>1,000 Likes</div>
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#f5a623"></div>10,000 Vistas</div>
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#22d48a"></div>30 Comentarios</div>
+          </div>
+          <div class="pcard-foot"><span class="pcard-price" id="pc1price">Bs 212</span><span class="pcard-off" id="pc1off">15% OFF</span></div>
+        </div>
+        <div class="pcard" id="pc2" onclick="loadPreset(2)">
+          <div class="pcard-check">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="pbadge prem">👑 PREMIUM</div>
+          <div class="pcard-top">
+            <div class="pcard-emoji" style="background:rgba(245,166,35,0.15)">👑</div>
+            <div><div class="pcard-name">Influencer</div><div class="pcard-desc">Para grandes creadores</div></div>
+          </div>
+          <div class="pcard-svcs" id="ps2svcs">
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#ff3b6e"></div>5,000 Seguidores</div>
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#ff7043"></div>3,000 Likes</div>
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#f5a623"></div>10,000 Vistas</div>
+            <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#22d48a"></div>30 Comentarios</div>
+          </div>
+          <div class="pcard-foot"><span class="pcard-price" id="pc2price">Bs 520</span><span class="pcard-off" id="pc2off">20% OFF</span></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="slbl">👥 1. SELECCIONA SERVICIOS</div>
+          <div class="spick-grid">
+            <button class="spick seg" data-svc="seguidores" onclick="togglePick('seguidores',this)">
+              👥 Seguidores
+              <div class="spick-check"><div class="spick-inner"></div></div>
+            </button>
+            <button class="spick lik" data-svc="likes" onclick="togglePick('likes',this)">
+              ❤️ Likes
+              <div class="spick-check"><div class="spick-inner"></div></div>
+            </button>
+            <button class="spick vis" data-svc="vistas" onclick="togglePick('vistas',this)">
+              👁️ Vistas
+              <div class="spick-check"><div class="spick-inner"></div></div>
+            </button>
+            <button class="spick com" data-svc="comentarios" onclick="togglePick('comentarios',this)">
+              💬 Comentarios
+              <div class="spick-check"><div class="spick-inner"></div></div>
+            </button>
+          </div>
+          <div class="warn-strip" id="warnStrip">⚠️ Selecciona al menos 2 servicios</div>
+
+          <div class="qty-block" id="qtyBlock">
+            <div class="slbl" style="margin-top:1.2rem">📦 2. CANTIDADES</div>
+            <div class="qty-rows" id="qtyRows"></div>
+          </div>
+
+          <div class="disc-block" id="discBlock">
+            <div class="slbl" style="margin-top:1.2rem">🏷️ 3. DESCUENTO DEL COMBO</div>
+            <div class="disc-slider-wrap">
+              <div class="disc-top">
+                <span class="disc-top-lbl">Descuento aplicado</span>
+                <span><span class="disc-val-display" id="discDisplay">10</span><span class="disc-val-pct"> %</span></span>
+              </div>
+              <div class="slider-track" id="sliderTrack">
+                <div class="slider-fill" id="sliderFill" style="width:40%"></div>
+                <div class="slider-thumb" id="sliderThumb" style="left:40%"></div>
+                <input type="range" class="disc-range" id="discRange" min="0" max="25" value="10" oninput="onSlider()">
+              </div>
+              <div class="disc-presets">
+                <button class="dp-btn" onclick="setDisc(5)">5%</button>
+                <button class="dp-btn" onclick="setDisc(10)">10%</button>
+                <button class="dp-btn active" onclick="setDisc(15)">15%</button>
+                <button class="dp-btn" onclick="setDisc(20)">20%</button>
+                <button class="dp-btn" onclick="setDisc(25)">25%</button>
+              </div>
+              <div class="disc-note">ℹ️ El descuento se aplica al valor total del combo</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="slbl">📊 RESUMEN EN VIVO</div>
+          <div class="summary-panel">
+            <div class="sp-head">
+              <div class="sp-head-title">🎁 COMBO ACTUAL</div>
+              <div class="sp-combo-name" id="spComboName">Personaliza tu combo</div>
+            </div>
+            <div class="sp-rows" id="spRows">
+              <div class="sp-empty">Selecciona servicios para ver el resumen</div>
+            </div>
+            <div class="sp-total">
+              <div class="sp-total-row"><span>Valor individual</span><span class="v" id="spOrig">Bs -</span></div>
+              <div class="sp-disc-row"><span id="spDiscLbl">Descuento (10%)</span><span class="v" id="spDiscVal">- Bs -</span></div>
+              <div class="sp-final-lbl">TOTAL DEL COMBO</div>
+              <div class="sp-final-row"><span></span><div class="sp-final-val" id="spTotal">Bs -</div></div>
+              <div class="sp-save-pill" id="spSave">
+                💰 <span id="spSaveTxt">Ahorras Bs -</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-foot">
+      <button class="save-btn" id="saveBtn" onclick="applyCombo()" disabled>
+        ⚡ GUARDAR COMBO
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
