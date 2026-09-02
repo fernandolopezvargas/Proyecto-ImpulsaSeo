@@ -6,41 +6,41 @@ const COMMENTS_PACKAGES = [
   { idSuffix: "001", cantidad: 1 }, { idSuffix: "002", cantidad: 3 }, { idSuffix: "003", cantidad: 5 },
   { idSuffix: "004", cantidad: 7 }, { idSuffix: "005", cantidad: 10 }, { idSuffix: "006", cantidad: 20 }, { idSuffix: "007", cantidad: 30 }
 ];
-const USD_TO_BS = 10;
+let USD_TO_BS = 10;
 let currentPlatform = "instagram", currentService = "likes";
 let currentSelectedRow = null;
 
 const SERVICE_IDS = {
-  instagram: { 
-     seguidores: "IG-FOL-3411",
-     likes: "IG-LIK-5350", 
-     vistas: "IG-VWS-3844", 
-     comentarios: "IG-CMT-5493" 
+  instagram: {
+    seguidores: "IG-FOL-641",
+    likes: "IG-LIK-5350",
+    vistas: "IG-VWS-3844",
+    comentarios: "IG-CMT-5493"
   },
-  tiktok: { 
-    seguidores: "TT-FOL-4793", 
-    likes: "TT-LIK-1801", 
-    vistas: "TT-VWS-4700", 
-    comentarios: "TT-CMT-4251" 
+  tiktok: {
+    seguidores: "TT-FOL-4787",
+    likes: "TT-LIK-1801",
+    vistas: "TT-VWS-4700",
+    comentarios: "TT-CMT-4251"
   }
 };
 
 const PANEL_IDS = {
-  instagram: { seguidores: "3411", likes: "5350", vistas: "3844", comentarios: "5493" },
-  tiktok: { seguidores: "4793", likes: "1801", vistas: "4700", comentarios: "4251" }
+  instagram: { seguidores: "641", likes: "5350", vistas: "3844", comentarios: "5493" },
+  tiktok: { seguidores: "4787", likes: "1801", vistas: "4700", comentarios: "4251" }
 };
 
-const defaultCost = { 
-  instagram: { seguidores: 1.074, likes: 0.418, vistas: 0.184, comentarios: 24.202 }, 
-  tiktok: { seguidores: 5.786, likes: 0.653, vistas: 0.138, comentarios: 35.00 } 
+const defaultCost = {
+  instagram: { seguidores: 1.074, likes: 0.418, vistas: 0.184, comentarios: 24.202 },
+  tiktok: { seguidores: 5.786, likes: 0.653, vistas: 0.138, comentarios: 35.00 }
 };
 const DEFAULT_MARGIN = 250;
 
 const serviceConfig = {
-  seguidores: { title: "Seguidores", desc: "Crecimiento de audiencia", combinedDesc: "Crecimiento de audiencia orgánica", icon: "fas fa-users", iconClass: "seguidores" },
-  likes: { title: "Likes", desc: "Interacción en publicaciones", combinedDesc: "Interacción en publicaciones", icon: "fas fa-heart", iconClass: "likes" },
+  seguidores: { title: "Seguidores", desc: "Crecimiento de audiencia", combinedDesc: "Crecimiento de audiencia orgánica", icon: "fas fa-user-group", iconClass: "seguidores" },
+  likes: { title: "Likes", desc: "Interacción en publicaciones", combinedDesc: "Interacción en publicaciones", icon: "fas fa-thumbs-up", iconClass: "likes" },
   vistas: { title: "Vistas", desc: "Visibilidad y alcance", combinedDesc: "Visibilidad y alcance", icon: "fas fa-eye", iconClass: "vistas" },
-  comentarios: { title: "Comentarios", desc: "Engagement auténtico", combinedDesc: "Engagement auténtico", icon: "fas fa-comments", iconClass: "comentarios" }
+  comentarios: { title: "Comentarios", desc: "Engagement auténtico", combinedDesc: "Engagement auténtico", icon: "fas fa-message", iconClass: "comentarios" }
 };
 
 function getCurrentPackages() { return currentService === "comentarios" ? COMMENTS_PACKAGES : STANDARD_PACKAGES; }
@@ -80,7 +80,24 @@ function getServiceMargin(svc) {
 
 function generateServiceId() { return SERVICE_IDS[currentPlatform][currentService]; }
 function updateServiceIdBadge() { document.getElementById('badgeId').innerHTML = generateServiceId(); }
-function updateBadge() { document.getElementById('panelIdBadge').innerHTML = `ID #${PANEL_IDS[currentPlatform][currentService]}`; }
+
+function copyServiceId() {
+  const id = PANEL_IDS[currentPlatform][currentService];
+  navigator.clipboard.writeText(id).then(() => {
+    const badge = document.getElementById('badgeId');
+    const original = badge.innerHTML;
+    badge.innerHTML = '¡Copiado!';
+    badge.style.background = 'linear-gradient(135deg, rgba(76,175,80,0.3), rgba(76,175,80,0.15))';
+    badge.style.color = '#4caf50';
+    badge.style.borderColor = 'rgba(76,175,80,0.5)';
+    setTimeout(() => {
+      badge.innerHTML = original;
+      badge.style.background = '';
+      badge.style.color = '';
+      badge.style.borderColor = '';
+    }, 1500);
+  });
+}
 
 function getParams() {
   let base = parseFloat(document.getElementById('baseCostPerThousand')?.value);
@@ -113,9 +130,9 @@ function renderTable() {
     row.insertCell(1).innerHTML = `${p.cantidad.toLocaleString()}`;
     row.insertCell(2).innerHTML = `$${cost.toFixed(2)}`;
     row.insertCell(3).innerHTML = `$${sale.toFixed(2)}`;
-    row.insertCell(4).innerHTML = `<span class="bs-amount">Bs ${bs.toFixed(0)}</span>`;
-    row.addEventListener('click', (function(clickedRow) {
-      return function() {
+    row.insertCell(4).innerHTML = `<span class="bs-amount">${bs.toFixed(2)} Bs</span>`;
+    row.addEventListener('click', (function (clickedRow) {
+      return function () {
         if (currentSelectedRow && currentSelectedRow !== clickedRow) currentSelectedRow.classList.remove('selected');
         if (clickedRow.classList.contains('selected')) { clickedRow.classList.remove('selected'); currentSelectedRow = null; }
         else { clickedRow.classList.add('selected'); currentSelectedRow = clickedRow; }
@@ -130,7 +147,7 @@ function updateKPI() {
   const sale1k = computeSale(cost1k, margin);
   const profitUsd = sale1k - cost1k;
   const profitBs = profitUsd * USD_TO_BS;
-  document.getElementById('kpiMainValue').innerHTML = `Bs ${profitBs.toFixed(0)}`;
+  document.getElementById('kpiMainValue').innerHTML = `${profitBs.toFixed(2)} <span class="kpi-currency">Bs</span>`;
   document.getElementById('kpiPercent').innerHTML = `+${margin}%`;
   document.getElementById('detailCost').innerHTML = `$${cost1k.toFixed(2)}`;
   document.getElementById('detailSale').innerHTML = `$${sale1k.toFixed(2)}`;
@@ -148,7 +165,7 @@ function updateBadgeContent() {
   iconContainer.className = `badge-icon ${config.iconClass}`;
 }
 
-function refresh() { renderTable(); updateKPI(); updateUI(); updateBadge(); updateBadgeContent(); updateServiceIdBadge(); save(); }
+function refresh() { renderTable(); updateKPI(); updateUI(); updateBadgeContent(); updateServiceIdBadge(); save(); }
 
 function updateUI() {
   document.querySelectorAll('.service-item').forEach(c => { if (c.dataset.service === currentService) c.classList.add('active'); else c.classList.remove('active'); });
@@ -166,7 +183,25 @@ function bind() {
   document.querySelectorAll('.service-item').forEach(c => { c.addEventListener('click', () => { if (c.dataset.service !== currentService) switchTo(currentPlatform, c.dataset.service); }); });
 }
 
-function init() { load(); bind(); refresh(); updateBadgeContent(); updateServiceIdBadge(); }
+async function fetchExchangeRate() {
+  try {
+    const res = await fetch('https://api.dolaresabolivianos.com/api/v1/data/last');
+    const data = await res.json();
+    if (data && data[0]) {
+      const compra = data[0].q10_buy;
+      const venta = data[0].upper_whisker_sell;
+      if (compra && venta) {
+        USD_TO_BS = (compra + venta) / 2;
+        document.getElementById('rateValue').textContent = `$1 USD = ${USD_TO_BS.toFixed(2)} Bs`;
+        refresh();
+      }
+    }
+  } catch (e) {
+    console.warn('No se pudo obtener tipo de cambio, usando valor por defecto');
+  }
+}
+
+function init() { load(); bind(); refresh(); updateBadgeContent(); updateServiceIdBadge(); fetchExchangeRate(); setInterval(fetchExchangeRate, 60000); }
 init();
 
 /* ══════════════════════════════════════════
@@ -195,8 +230,8 @@ function getServicePriceBs(svc, qty) {
 
 function updateSaveButtonText() {
   const platformName = currentPlatform === "instagram" ? "INSTAGRAM" : "TIKTOK";
-  const platformIcon = currentPlatform === "instagram" 
-    ? '<i class="fab fa-instagram" style="margin-right:6px"></i>' 
+  const platformIcon = currentPlatform === "instagram"
+    ? '<i class="fab fa-instagram" style="margin-right:6px"></i>'
     : '<i class="fab fa-tiktok" style="margin-right:6px"></i>';
   const btn = document.getElementById('saveBtn');
   if (btn) btn.innerHTML = `⚡ GUARDAR COMBO ${platformIcon}${platformName}`;
@@ -231,7 +266,7 @@ function updatePresetPrices() {
     const discounted = total * (1 - p.disc / 100);
     const priceEl = document.getElementById(`pc${i}price`);
     const offEl = document.getElementById(`pc${i}off`);
-    if (priceEl) priceEl.textContent = `Bs ${discounted.toFixed(0)}`;
+    if (priceEl) priceEl.textContent = `${discounted.toFixed(2)} Bs`;
     if (offEl) offEl.textContent = `${p.disc}% OFF`;
   });
 }
@@ -247,7 +282,7 @@ function updateSelectedPresetCard() {
   }
   const discounted = total * (1 - disc / 100);
   const priceEl = document.getElementById(`pc${i}price`);
-  if (priceEl) priceEl.textContent = `Bs ${discounted.toFixed(0)}`;
+  if (priceEl) priceEl.textContent = `${discounted.toFixed(2)} Bs`;
   const offEl = document.getElementById(`pc${i}off`);
   if (offEl) offEl.textContent = `${disc}% OFF`;
   const svcsEl = document.getElementById(`ps${i}svcs`);
@@ -260,7 +295,7 @@ function updateSelectedPresetCard() {
     svcsEl.innerHTML = html;
   }
   PRESETS[i].svcs = Array.from(pickedSvcs);
-  PRESETS[i].qtys = {...customQtys};
+  PRESETS[i].qtys = { ...customQtys };
   PRESETS[i].disc = disc;
 }
 
@@ -353,31 +388,30 @@ function calcSummary() {
         <div class="sp-row-dot" style="background:${SVCCLR[s]}"></div>
         ${NAMES[s]} (${qty.toLocaleString()})
       </div>
-      <div class="sp-row-val">Bs ${bsD.toFixed(0)}</div>
+      <div class="sp-row-val">${bsD.toFixed(2)} Bs</div>
     </div>`;
   }
   const saved = totOrig - totDisc;
   document.getElementById('spRows').innerHTML = rows;
-  document.getElementById('spOrig').textContent = 'Bs ' + totOrig.toFixed(0);
-  document.getElementById('spDiscLbl').textContent = 'Descuento (' + disc + '%)';
-  document.getElementById('spDiscVal').textContent = '- Bs ' + saved.toFixed(0);
-  document.getElementById('spTotal').textContent = 'Bs ' + totDisc.toFixed(0);
+  document.getElementById('spOrig').textContent = totOrig.toFixed(2) + ' Bs';
+  document.getElementById('spDiscVal').textContent = '- ' + saved.toFixed(2) + ' Bs';
+  document.getElementById('spTotal').textContent = totDisc.toFixed(2) + ' Bs';
   const pill = document.getElementById('spSave');
-  if (disc > 0) { pill.classList.add('show'); document.getElementById('spSaveTxt').textContent = 'Ahorras Bs ' + saved.toFixed(0) + ' con este combo'; }
+  if (disc > 0) { pill.classList.add('show'); document.getElementById('spSaveTxt').textContent = 'Ahorras ' + saved.toFixed(2) + ' Bs con este combo'; }
   else pill.classList.remove('show');
 }
 
 function clearSummary() {
   document.getElementById('spRows').innerHTML = '<div class="sp-empty">Selecciona servicios para ver el resumen</div>';
-  document.getElementById('spOrig').textContent = 'Bs -';
-  document.getElementById('spDiscVal').textContent = '- Bs -';
-  document.getElementById('spTotal').textContent = 'Bs -';
+  document.getElementById('spOrig').textContent = '- Bs';
+  document.getElementById('spDiscVal').textContent = '- Bs';
+  document.getElementById('spTotal').textContent = '- Bs';
   document.getElementById('spSave').classList.remove('show');
 }
 
 /* ── helper: #rrggbb → "r,g,b" ── */
 function hexToRgb(hex) {
-  return `${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)}`;
+  return `${parseInt(hex.slice(1, 3), 16)},${parseInt(hex.slice(3, 5), 16)},${parseInt(hex.slice(5, 7), 16)}`;
 }
 
 function applyCombo() {
@@ -397,11 +431,11 @@ function applyCombo() {
   const totalText = document.getElementById('spTotal').textContent;
 
   /* ── Actualizar banner de último combo guardado ── */
-  document.getElementById('scbIcon').textContent     = emoji;
+  document.getElementById('scbIcon').textContent = emoji;
   const nameEl = document.getElementById('scbName');
   nameEl.innerHTML = `${name} <span class="scb-plat">• ${platName}</span>`;
   document.getElementById('scbDiscount').textContent = disc > 0 ? `${disc}% OFF` : 'Sin descuento';
-  document.getElementById('scbTotal').textContent    = totalText;
+  document.getElementById('scbTotal').textContent = totalText;
 
   let pillsHtml = '';
   for (let s of pickedSvcs) {

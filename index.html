@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -24,10 +25,10 @@
   </div>
 
   <div class="services-list" id="servicesList">
-    <div class="service-item" data-service="seguidores"><i class="fas fa-user-plus"></i> Seguidores</div>
-    <div class="service-item active" data-service="likes"><i class="fas fa-heart"></i> Likes</div>
+    <div class="service-item" data-service="seguidores"><i class="fas fa-user-group"></i> Seguidores</div>
+    <div class="service-item active" data-service="likes"><i class="fas fa-thumbs-up"></i> Likes</div>
     <div class="service-item" data-service="vistas"><i class="fas fa-eye"></i> Vistas</div>
-    <div class="service-item" data-service="comentarios"><i class="fas fa-comment"></i> Comentarios</div>
+    <div class="service-item" data-service="comentarios"><i class="fas fa-message"></i> Comentarios</div>
   </div>
 
   <!-- ══ ÚLTIMO COMBO GUARDADO ══ -->
@@ -38,7 +39,7 @@
     <div class="scb-services" id="scbServices"></div>
     <div class="scb-right">
       <span class="scb-total-inline">TOTAL</span>
-      <span class="scb-total-val" id="scbTotal">Bs —</span>
+      <span class="scb-total-val" id="scbTotal">— Bs</span>
       <div class="scb-discount" id="scbDiscount">0% OFF</div>
       <button class="scb-remove-btn" onclick="removeCombo()">Quitar combo</button>
     </div>
@@ -50,31 +51,31 @@
       <div class="badge-title" id="badgeTitle">Likes • <span>Instagram</span></div>
       <div class="badge-description" id="badgeDesc">Interacción en publicaciones</div>
     </div>
-    <div class="badge-id-tag" id="badgeId">IG-LIK-5350</div>
+    <div class="badge-id-tag" id="badgeId" onclick="copyServiceId()" title="Click para copiar">IG-LIK-5350</div>
   </div>
 
   <div class="dashboard-grid">
     <div class="params-card">
       <div class="panel-header">
         <div class="panel-title-left"><i class="fas fa-calculator"></i> Calculadora</div>
-        <div class="id-tag-badge" id="panelIdBadge">ID #5350</div>
+        <div class="rate-badge" id="rateBadge">
+          <span><strong id="rateValue">$1 USD = 10.00 Bs</strong></span>
+        </div>
       </div>
-      <div class="input-row">
-        <input type="number" id="baseCostPerThousand" class="premium-input" step="0.01" placeholder="Costo de 1,000($)">
-      </div>
-      <div class="input-row">
-        <input type="number" id="profitMarginPercent" class="premium-input" step="1" placeholder="% de ganancia">
-      </div>
-      <div class="rate-badge">
-        <span><i class="fas fa-dollar-sign"></i> Tipo de cambio</span>
-        <span><strong>$1 USD = Bs 10.00</strong></span>
+      <div class="input-row-group">
+        <div class="input-row">
+          <input type="number" id="baseCostPerThousand" class="premium-input" step="0.01" placeholder="Costo de 1,000($)">
+        </div>
+        <div class="input-row">
+          <input type="number" id="profitMarginPercent" class="premium-input" step="1" placeholder="% de ganancia">
+        </div>
       </div>
       <div class="kpi-card">
         <div class="kpi-header-row">
           <span class="kpi-label">GANANCIA POR 1,000 $</span>
           <div class="kpi-percent-badge" id="kpiPercent">+250%</div>
         </div>
-        <div class="kpi-main-value" id="kpiMainValue">Bs 27</div>
+        <div class="kpi-main-value" id="kpiMainValue">27 <span class="kpi-currency">Bs</span></div>
         <div class="kpi-detail" id="kpiDetail">
           Costo <span id="detailCost">$1.07</span> → Venta <span id="detailSale">$3.76</span> → Ganancia <span id="detailProfit">$2.69</span>
         </div>
@@ -128,7 +129,7 @@
             <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#ff3b6e"></div>500 Seguidores</div>
             <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#ff7043"></div>500 Likes</div>
           </div>
-          <div class="pcard-foot"><span class="pcard-price" id="pc0price">Bs 45</span><span class="pcard-off" id="pc0off">10% OFF</span></div>
+          <div class="pcard-foot"><span class="pcard-price" id="pc0price">45 Bs</span><span class="pcard-off" id="pc0off">10% OFF</span></div>
         </div>
         <div class="pcard" id="pc1" onclick="loadPreset(1)">
           <div class="pcard-check">
@@ -145,7 +146,7 @@
             <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#f5a623"></div>10,000 Vistas</div>
             <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#22d48a"></div>30 Comentarios</div>
           </div>
-          <div class="pcard-foot"><span class="pcard-price" id="pc1price">Bs 212</span><span class="pcard-off" id="pc1off">15% OFF</span></div>
+          <div class="pcard-foot"><span class="pcard-price" id="pc1price">212 Bs</span><span class="pcard-off" id="pc1off">15% OFF</span></div>
         </div>
         <div class="pcard" id="pc2" onclick="loadPreset(2)">
           <div class="pcard-check">
@@ -162,7 +163,7 @@
             <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#f5a623"></div>10,000 Vistas</div>
             <div class="pcard-svc"><div class="pcard-svc-dot" style="background:#22d48a"></div>30 Comentarios</div>
           </div>
-          <div class="pcard-foot"><span class="pcard-price" id="pc2price">Bs 520</span><span class="pcard-off" id="pc2off">20% OFF</span></div>
+          <div class="pcard-foot"><span class="pcard-price" id="pc2price">520 Bs</span><span class="pcard-off" id="pc2off">20% OFF</span></div>
         </div>
       </div>
 
@@ -229,12 +230,12 @@
               <div class="sp-empty">Selecciona servicios para ver el resumen</div>
             </div>
             <div class="sp-total">
-              <div class="sp-total-row"><span>Valor individual</span><span class="v" id="spOrig">Bs -</span></div>
-              <div class="sp-disc-row"><span id="spDiscLbl">Descuento (10%)</span><span class="v" id="spDiscVal">- Bs -</span></div>
+              <div class="sp-total-row"><span>Valor individual</span><span class="v" id="spOrig">- Bs</span></div>
+              <div class="sp-disc-row"><span id="spDiscLbl">Descuento (10%)</span><span class="v" id="spDiscVal">- Bs</span></div>
               <div class="sp-final-lbl">TOTAL DEL COMBO</div>
-              <div class="sp-final-row"><span></span><div class="sp-final-val" id="spTotal">Bs -</div></div>
+              <div class="sp-final-row"><span></span><div class="sp-final-val" id="spTotal">- Bs</div></div>
               <div class="sp-save-pill" id="spSave">
-                💰 <span id="spSaveTxt">Ahorras Bs -</span>
+                💰 <span id="spSaveTxt">Ahorras - Bs</span>
               </div>
             </div>
           </div>
