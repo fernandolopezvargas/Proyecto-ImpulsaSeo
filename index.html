@@ -15,7 +15,7 @@
 <body>
 <div class="premium-container">
   <div class="brand-header">
-    <h1>IMPULSA.SEO PREMIUM</h1>
+    <h1><span class="brand-name">Impulsa<span class="brand-dot">.</span><span class="brand-seo">Seo</span></span> <span class="brand-premium">Premium</span></h1>
   </div>
 
   <div class="platform-buttons">
@@ -33,15 +33,20 @@
 
   <!-- ══ ÚLTIMO COMBO GUARDADO ══ -->
   <div class="saved-combo-banner" id="savedComboBanner">
-    <div class="scb-live-dot"></div>
-    <div class="scb-icon" id="scbIcon">🎁</div>
-    <div class="scb-name" id="scbName">Combo <span class="scb-plat" id="scbPlat">• Instagram</span></div>
-    <div class="scb-services" id="scbServices"></div>
+    <div class="scb-top-row">
+        <div class="scb-live-dot"></div>
+        <div class="scb-icon" id="scbIcon">🎁</div>
+        <div class="scb-name" id="scbName">Combo <span class="scb-plat" id="scbPlat">• Instagram</span></div>
+    </div>
+
+    <div class="scb-info">
+      <div class="scb-services" id="scbServices"></div>
+    </div>
     <div class="scb-right">
       <span class="scb-total-inline">TOTAL</span>
       <span class="scb-total-val" id="scbTotal">— Bs</span>
       <div class="scb-discount" id="scbDiscount">0% OFF</div>
-      <button class="scb-remove-btn" onclick="removeCombo()">Quitar combo</button>
+      <button class="scb-remove-btn" onclick="removeCombo()"><i class="fas fa-trash-can"></i></button>
     </div>
   </div>
 

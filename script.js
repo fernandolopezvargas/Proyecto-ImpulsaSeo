@@ -20,15 +20,23 @@ const SERVICE_IDS = {
   tiktok: {
     seguidores: "TT-FOL-4787",
     likes: "TT-LIK-1801",
-    vistas: "TT-VWS-4700",
+    vistas: "TT-VWS-4202",
     comentarios: "TT-CMT-4251"
   }
 };
 
-const PANEL_IDS = {
-  instagram: { seguidores: "641", likes: "5350", vistas: "3844", comentarios: "5493" },
-  tiktok: { seguidores: "4787", likes: "1801", vistas: "4700", comentarios: "4251" }
-};
+// PANEL_IDS se genera automáticamente de SERVICE_IDS
+function getPANEL_IDS() {
+  const ids = {};
+  for (const [platform, services] of Object.entries(SERVICE_IDS)) {
+    ids[platform] = {};
+    for (const [service, fullId] of Object.entries(services)) {
+      ids[platform][service] = fullId.split('-').pop();
+    }
+  }
+  return ids;
+}
+const PANEL_IDS = getPANEL_IDS();
 
 const defaultCost = {
   instagram: { seguidores: 1.074, likes: 0.418, vistas: 0.184, comentarios: 24.202 },
