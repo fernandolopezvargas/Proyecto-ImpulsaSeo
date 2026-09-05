@@ -171,14 +171,22 @@ function updateBadgeContent() {
   const config = serviceConfig[currentService];
   iconContainer.innerHTML = `<i class="${config.icon}"></i>`;
   iconContainer.className = `badge-icon ${config.iconClass}`;
+  document.getElementById('serviceBadge').className = `service-badge-container ${currentService}`;
 }
 
 function refresh() { renderTable(); updateKPI(); updateUI(); updateBadgeContent(); updateServiceIdBadge(); save(); }
 
 function updateUI() {
-  document.querySelectorAll('.service-item').forEach(c => { if (c.dataset.service === currentService) c.classList.add('active'); else c.classList.remove('active'); });
-  const tik = document.getElementById('btnTikTok'), ins = document.getElementById('btnInstagram');
-  if (currentPlatform === 'tiktok') { tik.classList.add('active'); ins.classList.remove('active'); } else { ins.classList.add('active'); tik.classList.remove('active'); }
+  // Actualizar servicios (tanto verticales del sidebar como horizontales del móvil)
+  document.querySelectorAll('.service-item, .service-item-vertical').forEach(c => { 
+    if (c.dataset.service === currentService) c.classList.add('active'); 
+    else c.classList.remove('active'); 
+  });
+  // Actualizar plataformas (tanto verticales del sidebar como horizontales del móvil)
+  document.querySelectorAll('[data-platform]').forEach(btn => {
+    if (btn.dataset.platform === currentPlatform) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
 }
 
 function switchTo(platform, service) { save(); currentPlatform = platform; currentService = service; load(); refresh(); }
@@ -186,9 +194,19 @@ function switchTo(platform, service) { save(); currentPlatform = platform; curre
 function bind() {
   document.getElementById('baseCostPerThousand')?.addEventListener('input', () => refresh());
   document.getElementById('profitMarginPercent')?.addEventListener('input', () => refresh());
-  document.getElementById('btnTikTok')?.addEventListener('click', () => { if (currentPlatform !== 'tiktok') switchTo('tiktok', currentService); });
-  document.getElementById('btnInstagram')?.addEventListener('click', () => { if (currentPlatform !== 'instagram') switchTo('instagram', currentService); });
-  document.querySelectorAll('.service-item').forEach(c => { c.addEventListener('click', () => { if (c.dataset.service !== currentService) switchTo(currentPlatform, c.dataset.service); }); });
+  // Bind para botones de plataforma (tanto verticales como horizontales)
+  document.querySelectorAll('[data-platform]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const platform = btn.dataset.platform;
+      if (currentPlatform !== platform) switchTo(platform, currentService);
+    });
+  });
+  // Bind para servicios (tanto verticales como horizontales)
+  document.querySelectorAll('.service-item, .service-item-vertical').forEach(c => { 
+    c.addEventListener('click', () => { 
+      if (c.dataset.service !== currentService) switchTo(currentPlatform, c.dataset.service); 
+    }); 
+  });
 }
 
 async function fetchExchangeRate() {
@@ -248,6 +266,7 @@ function updateSaveButtonText() {
 function openComboModal() {
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  document.body.classList.add('modal-open');
   pickedSvcs = new Set();
   selectedPresetIndex = -1;
   document.querySelectorAll('.spick').forEach(b => b.classList.remove('picked'));
@@ -261,6 +280,7 @@ function openComboModal() {
 function closeComboModal() {
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
+  document.body.classList.remove('modal-open');
 }
 
 function overlayClick(e) {
@@ -474,3 +494,30 @@ function removeCombo() {
     banner.style.transform = '';
   }, 260);
 }
+
+// ══ SIDEBAR TOGGLE (MOBILE) ══
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+  document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+}
+
+// Ocultar botón al hacer scroll
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('sidebarToggle');
+  if (btn) {
+    if (window.scrollY > 10) btn.classList.add('scrolled');
+    else btn.classList.remove('scrolled');
+  }
+});
+
+// Cerrar sidebar al hacer clic en un servicio (mobile)
+document.querySelectorAll('.service-item-vertical').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 780) {
+      toggleSidebar();
+    }
+  });
+});

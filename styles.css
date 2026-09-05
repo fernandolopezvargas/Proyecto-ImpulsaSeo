@@ -1,33 +1,155 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; padding: 2rem 1.5rem; min-height: 100vh; }
+body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; min-height: 100vh; }
+
+/* ══ LAYOUT APP ══ */
+.app-layout { display: flex; min-height: 100vh; }
+
+/* ══ SIDEBAR ══ */
+.sidebar {
+  width: 240px;
+  background: rgba(13, 16, 28, 0.98);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 100;
+  overflow-y: auto;
+}
+.sidebar-brand {
+  margin-bottom: 2rem;
+  padding: 0 0.5rem;
+}
+.sidebar-brand h1 { font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; color: #e4405f; margin-bottom: 0.2rem; }
+.sidebar-brand .brand-premium { font-size: 0.65rem; text-transform: uppercase; color: #6b7f9e; letter-spacing: 2px; }
+.sidebar-section { margin-bottom: 1.5rem; }
+.sidebar-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #4a5a7a;
+  padding: 0 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Botones de plataforma verticales */
+.platform-buttons-vertical { display: flex; flex-direction: column; gap: 0.4rem; }
+.platform-btn-vertical {
+  background: rgba(20, 24, 35, 0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #8a9ec2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.platform-btn-vertical i { font-size: 1rem; width: 20px; text-align: center; }
+.platform-btn-vertical:hover { background: rgba(30, 35, 48, 0.9); color: #eef2ff; border-color: rgba(255,255,255,0.12); }
+.platform-btn-vertical.active {
+  background: linear-gradient(135deg, rgba(228,64,95,0.2), rgba(228,64,95,0.08));
+  border-color: rgba(228,64,95,0.4);
+  color: #e4405f;
+  font-weight: 600;
+}
+.platform-btn-vertical.active i { color: #e4405f; }
+
+/* Servicios verticales */
+.services-list-vertical { display: flex; flex-direction: column; gap: 0.25rem; }
+.service-item-vertical {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #6b7f9e;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+.service-item-vertical i { font-size: 0.85rem; width: 20px; text-align: center; opacity: 0.7; }
+.service-item-vertical:hover { color: #eef2ff; background: rgba(255,255,255,0.04); }
+.service-item-vertical.active {
+  color: #eef2ff;
+  background: rgba(228,64,95,0.12);
+}
+.service-item-vertical.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: #e4405f;
+  border-radius: 0 4px 4px 0;
+}
+.service-item-vertical.active i { color: #e4405f; opacity: 1; }
+
+/* Combo button vertical */
+.sidebar-bottom { margin-top: auto; }
+.combo-btn-vertical {
+  background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(124,58,237,0.15));
+  border: 1px solid rgba(167,139,250,0.3);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #a78bfa;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.combo-btn-vertical:hover {
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 8px 20px rgba(124,58,237,0.3);
+}
+
+/* ══ MAIN CONTENT ══ */
+.main-content {
+  flex: 1;
+  margin-left: 240px;
+  padding: 2rem 2rem;
+  min-height: 100vh;
+  position: relative;
+}
 .premium-container { max-width: 1400px; margin: 0 auto; }
-.brand-header { margin-bottom: 2rem; text-align: center; }
-.brand-header h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: 2px; color: #e4405f; }
+.brand-header { display: none; }
 .brand-name { font-family: 'Fraunces', serif; }
 .brand-dot { color: #ffffff; }
 .brand-seo { color: #ffffff; }
 .brand-premium { font-family: 'Inter', sans-serif; text-transform: uppercase; color: #e4405f; }
-.platform-buttons { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
-.platform-btn { background: rgba(20, 24, 35, 0.9); border: 1px solid rgba(255,255,255,0.1); padding: 0.6rem 1.8rem; border-radius: 40px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); color: #9aaec9; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px); }
-.platform-btn i { font-size: 1rem; transition: transform 0.2s ease; }
-.platform-btn:hover { transform: translateY(-4px) scale(1.02); border-color: #e4405f; background: rgba(30, 35, 48, 0.95); color: #ffffff; box-shadow: 0 12px 24px rgba(228,64,95,0.2); }
-.platform-btn:hover i { transform: scale(1.1); }
-.platform-btn:active { transform: translateY(2px) scale(0.98); }
-.platform-btn.active { background: linear-gradient(135deg, #e4405f, #bc2f5a); border-color: transparent; color: white; box-shadow: 0 8px 20px rgba(228,64,95,0.3); }
-.platform-btn.active i { color: white; }
-.platform-btn.combo-btn { background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(124,58,237,0.15)); border: 1px solid rgba(167,139,250,0.3); color: #a78bfa; margin-left: auto; }
-.platform-btn.combo-btn:hover { background: linear-gradient(135deg, #a78bfa, #7c3aed); border-color: transparent; color: white; box-shadow: 0 12px 24px rgba(124,58,237,0.35); }
-.platform-btn.combo-btn i { color: #a78bfa; }
-.platform-btn.combo-btn:hover i { color: white; }
-.services-list { display: flex; flex-wrap: wrap; gap: 2rem; margin: 0 0 2rem 0; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.service-item { font-size: 0.9rem; font-weight: 500; color: #8a9ec2; cursor: pointer; transition: all 0.2s ease; position: relative; padding-bottom: 0.5rem; display: flex; align-items: center; gap: 6px; }
-.service-item i { font-size: 0.8rem; opacity: 0.6; transition: opacity 0.2s ease; }
-.service-item:hover { color: #eef2ff; transform: translateY(-1px); }
-.service-item:hover i { opacity: 1; }
-.service-item.active { color: #e4405f; }
-.service-item.active i { opacity: 1; color: #e4405f; }
-.service-item.active::after { content: ''; position: absolute; bottom: -0.5rem; left: 0; width: 100%; height: 2px; background: #e4405f; border-radius: 2px; }
-.service-badge-container { background: rgba(13, 16, 28, 0.97); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 0.5rem 1.5rem; width: 100%; backdrop-filter: blur(8px); margin: 0 0 1.5rem 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.platform-buttons { display: none; }
+.platform-btn { display: none; }
+.services-list { display: none; }
+.service-item { display: none; }
+
+/* Botón hamburguesa - oculto en desktop */
+.sidebar-toggle {
+  display: none;
+}
+.sidebar-overlay {
+  display: none;
+}
+.service-badge-container { padding: 0.8rem 1.5rem; width: 100%; margin: 0 0 1.5rem 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.service-badge-container.seguidores { background: linear-gradient(90deg, rgba(90,158,255,0.15), rgba(90,158,255,0.05)); border-bottom: 1px solid rgba(90,158,255,0.5); }
+.service-badge-container.likes { background: linear-gradient(90deg, rgba(228,64,95,0.15), rgba(228,64,95,0.05)); border-bottom: 1px solid rgba(228,64,95,0.5); }
+.service-badge-container.vistas { background: linear-gradient(90deg, rgba(243,156,18,0.15), rgba(243,156,18,0.05)); border-bottom: 1px solid rgba(243,156,18,0.5); }
+.service-badge-container.comentarios { background: linear-gradient(90deg, rgba(76,175,80,0.15), rgba(76,175,80,0.05)); border-bottom: 1px solid rgba(76,175,80,0.5); }
 .badge-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 14px; flex-shrink: 0; }
 .badge-icon i { font-size: 1.6rem; }
 .badge-icon.seguidores i { color: #5a9eff; }
@@ -80,15 +202,103 @@ body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; pa
 .price-table td:last-child .bs-amount { font-weight: 800; color: #f39c12; background: rgba(243,156,18,0.12); padding: 0.2rem 0.7rem; border-radius: 8px; display: inline-block; }
 footer { margin-top: 3rem; text-align: center; font-size: 0.7rem; padding: 1rem; background: rgba(18, 22, 32, 0.8); backdrop-filter: blur(8px); border-radius: 60px; width: fit-content; margin-left: auto; margin-right: auto; color: #6b7f9e; }
 @media (max-width: 780px) {
-  body { padding: 1rem; }
-  .services-list { gap: 1rem; }
+  /* Sidebar colapsable en móvil */
+  .sidebar {
+    display: flex;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+  }
+  .sidebar-overlay.open {
+    display: block;
+  }
+  
+  /* Botón hamburguesa */
+  .sidebar-toggle {
+    display: flex;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2000;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(13, 16, 28, 0.95);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #eef2ff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+  }
+  .sidebar-toggle:hover {
+    background: rgba(30, 35, 48, 0.95);
+    border-color: rgba(228,64,95,0.5);
+    color: #e4405f;
+  }
+  .sidebar-bottom { margin-top: auto; padding-top: 1rem; }
+  .sidebar.open ~ .sidebar-toggle {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .sidebar-toggle.scrolled {
+    opacity: 0;
+    pointer-events: none;
+  }
+  body.modal-open .sidebar-toggle {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .main-content { margin-left: 0; padding: 1rem; padding-top: 4rem; }
+  
+  /* Mostrar navegación horizontal en móvil */
+  .brand-header { display: block; margin-bottom: 1.5rem; text-align: center; }
+  .brand-header h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: 2px; color: #e4405f; }
+  .platform-buttons { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .platform-btn { background: rgba(20, 24, 35, 0.9); border: 1px solid rgba(255,255,255,0.1); padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 500; font-size: 0.8rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1); color: #9aaec9; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px); }
+  .platform-btn i { font-size: 1rem; transition: transform 0.2s ease; }
+  .platform-btn:hover { transform: translateY(-4px) scale(1.02); border-color: #e4405f; background: rgba(30, 35, 48, 0.95); color: #ffffff; box-shadow: 0 12px 24px rgba(228,64,95,0.2); }
+  .platform-btn:hover i { transform: scale(1.1); }
+  .platform-btn:active { transform: translateY(2px) scale(0.98); }
+  .platform-btn.active { background: linear-gradient(135deg, #e4405f, #bc2f5a); border-color: transparent; color: white; box-shadow: 0 8px 20px rgba(228,64,95,0.3); }
+  .platform-btn.active i { color: white; }
+  .platform-btn.combo-btn { background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(124,58,237,0.15)); border: 1px solid rgba(167,139,250,0.3); color: #a78bfa; margin-left: auto; }
+  .platform-btn.combo-btn:hover { background: linear-gradient(135deg, #a78bfa, #7c3aed); border-color: transparent; color: white; box-shadow: 0 12px 24px rgba(124,58,237,0.35); }
+  .platform-btn.combo-btn i { color: #a78bfa; }
+  .platform-btn.combo-btn:hover i { color: white; }
+  .services-list { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0 0 1.5rem 0; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .service-item { font-size: 0.85rem; font-weight: 500; color: #8a9ec2; cursor: pointer; transition: all 0.2s ease; position: relative; padding-bottom: 0.5rem; display: flex; align-items: center; gap: 6px; }
+  .service-item i { font-size: 0.8rem; opacity: 0.6; transition: opacity 0.2s ease; }
+  .service-item:hover { color: #eef2ff; transform: translateY(-1px); }
+  .service-item:hover i { opacity: 1; }
+  .service-item.active { color: #e4405f; }
+  .service-item.active i { opacity: 1; color: #e4405f; }
+  .service-item.active::after { content: ''; position: absolute; bottom: -0.5rem; left: 0; width: 100%; height: 2px; background: #e4405f; border-radius: 2px; }
+  
   .service-badge-container { flex-direction: column; align-items: center; text-align: center; }
   .badge-id-tag { align-self: center; }
-  .platform-btn { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
   .kpi-main-value { font-size: 1.8rem; }
   .kpi-header-row { flex-direction: column; align-items: stretch; text-align: center; }
   .kpi-percent-badge { display: inline-flex; width: fit-content; margin: 0 auto; }
   .platform-btn.combo-btn { margin-left: 0; width: 100%; justify-content: center; }
+  .dashboard-grid { flex-wrap: wrap; gap: 1.5rem; overflow: hidden; }
+  .params-card, .table-card { width: 100%; flex: none; min-width: 0; overflow: hidden; }
+  .table-card { overflow-x: auto; }
+  .premium-container { overflow: hidden; width: 100%; }
+  .main-content { overflow: hidden; }
   .saved-combo-banner {
     flex-direction: column;
     align-items: center;
@@ -124,9 +334,9 @@ footer { margin-top: 3rem; text-align: center; font-size: 0.7rem; padding: 1rem;
 
 /* ══ ÚLTIMO COMBO GUARDADO ══ */
 .saved-combo-banner {
-  background: rgba(13, 16, 28, 0.97);
-  border: 1px solid rgba(167,139,250,0.22);
-  border-radius: 16px;
+  background: linear-gradient(90deg, rgba(167,139,250,0.15), rgba(167,139,250,0.05));
+  border: none;
+  border-radius: 30px 10px;
   padding: 0.7rem 1.2rem;
   width: 100%;
   margin: 0 0 1.5rem 0;

@@ -13,25 +13,48 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="premium-container">
-  <div class="brand-header">
-    <h1><span class="brand-name">Impulsa<span class="brand-dot">.</span><span class="brand-seo">Seo</span></span> <span class="brand-premium">Premium</span></h1>
-  </div>
+<div class="app-layout">
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <h1><span class="brand-name">Impulsa<span class="brand-dot">.</span><span class="brand-seo">Seo</span></span></h1>
+      <span class="brand-premium">Premium</span>
+    </div>
 
-  <div class="platform-buttons">
-    <div class="platform-btn" data-platform="tiktok" id="btnTikTok"><i class="fab fa-tiktok"></i> TikTok</div>
-    <div class="platform-btn active" data-platform="instagram" id="btnInstagram"><i class="fab fa-instagram"></i> Instagram</div>
-    <div class="platform-btn combo-btn" onclick="openComboModal()"><i class="fas fa-gift"></i> Armar Combo</div>
-  </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">PLATAFORMAS</div>
+      <div class="platform-buttons-vertical">
+        <div class="platform-btn-vertical" data-platform="tiktok" id="btnTikTok"><i class="fab fa-tiktok"></i> TikTok</div>
+        <div class="platform-btn-vertical active" data-platform="instagram" id="btnInstagram"><i class="fab fa-instagram"></i> Instagram</div>
+      </div>
+    </div>
 
-  <div class="services-list" id="servicesList">
-    <div class="service-item" data-service="seguidores"><i class="fas fa-user-group"></i> Seguidores</div>
-    <div class="service-item active" data-service="likes"><i class="fas fa-thumbs-up"></i> Likes</div>
-    <div class="service-item" data-service="vistas"><i class="fas fa-eye"></i> Vistas</div>
-    <div class="service-item" data-service="comentarios"><i class="fas fa-message"></i> Comentarios</div>
-  </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">SERVICIOS</div>
+      <div class="services-list-vertical" id="servicesList">
+        <div class="service-item-vertical" data-service="seguidores"><i class="fas fa-user-group"></i> Seguidores</div>
+        <div class="service-item-vertical active" data-service="likes"><i class="fas fa-thumbs-up"></i> Likes</div>
+        <div class="service-item-vertical" data-service="vistas"><i class="fas fa-eye"></i> Vistas</div>
+        <div class="service-item-vertical" data-service="comentarios"><i class="fas fa-message"></i> Comentarios</div>
+      </div>
+    </div>
 
-  <!-- ══ ÚLTIMO COMBO GUARDADO ══ -->
+    <div class="sidebar-section sidebar-bottom">
+      <div class="combo-btn-vertical" onclick="openComboModal(); if(window.innerWidth <= 780) toggleSidebar();"><i class="fas fa-gift"></i> Armar Combo</div>
+    </div>
+  </nav>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="3.5" y="4.5" width="17" height="15" rx="3" stroke="currentColor" stroke-width="1.5"/>
+  <path d="M9 5V19" stroke="currentColor" stroke-width="1.5"/>
+</svg>
+  </button>
+
+  <main class="main-content">
+  <div class="premium-container">
+    <!-- ══ ÚLTIMO COMBO GUARDADO ══ -->
   <div class="saved-combo-banner" id="savedComboBanner">
     <div class="scb-top-row">
         <div class="scb-live-dot"></div>
@@ -94,6 +117,8 @@
     </div>
   </div>
   <footer><i class="fab fa-instagram"></i> <i class="fab fa-tiktok"></i> Modo oscuro premium · Selección de filas persistente</footer>
+  </div>
+  </main>
 </div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="overlayClick(event)">
@@ -254,6 +279,8 @@
       </button>
     </div>
   </div>
+  </div>
+  </main>
 </div>
 
 <script src="script.js"></script>
