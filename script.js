@@ -15,13 +15,15 @@ const SERVICE_IDS = {
     seguidores: "IG-FOL-641",
     likes: "IG-LIK-5350",
     vistas: "IG-VWS-3844",
-    comentarios: "IG-CMT-5493"
+    comentarios: "IG-CMT-5493",
+    live: "IG-LVE-7721"
   },
   tiktok: {
     seguidores: "TT-FOL-4787",
     likes: "TT-LIK-1801",
     vistas: "TT-VWS-4202",
-    comentarios: "TT-CMT-4251"
+    comentarios: "TT-CMT-4251",
+    live: "TT-LVE-3389"
   }
 };
 
@@ -39,8 +41,8 @@ function getPANEL_IDS() {
 const PANEL_IDS = getPANEL_IDS();
 
 const defaultCost = {
-  instagram: { seguidores: 1.074, likes: 0.418, vistas: 0.184, comentarios: 24.202 },
-  tiktok: { seguidores: 5.786, likes: 0.653, vistas: 0.138, comentarios: 35.00 }
+  instagram: { seguidores: 1.074, likes: 0.418, vistas: 0.184, comentarios: 24.202, live: 15.50 },
+  tiktok: { seguidores: 5.786, likes: 0.653, vistas: 0.138, comentarios: 35.00, live: 22.00 }
 };
 const DEFAULT_MARGIN = 250;
 
@@ -48,7 +50,8 @@ const serviceConfig = {
   seguidores: { title: "Seguidores", desc: "Crecimiento de audiencia", combinedDesc: "Crecimiento de audiencia orgánica", icon: "fas fa-user-group", iconClass: "seguidores" },
   likes: { title: "Likes", desc: "Interacción en publicaciones", combinedDesc: "Interacción en publicaciones", icon: "fas fa-thumbs-up", iconClass: "likes" },
   vistas: { title: "Vistas", desc: "Visibilidad y alcance", combinedDesc: "Visibilidad y alcance", icon: "fas fa-eye", iconClass: "vistas" },
-  comentarios: { title: "Comentarios", desc: "Engagement auténtico", combinedDesc: "Engagement auténtico", icon: "fas fa-message", iconClass: "comentarios" }
+  comentarios: { title: "Comentarios", desc: "Engagement auténtico", combinedDesc: "Engagement auténtico", icon: "fas fa-message", iconClass: "comentarios" },
+  live: { title: "Live", desc: "Espectadores en vivo", combinedDesc: "Espectadores en transmisiones en vivo", icon: "fas fa-video", iconClass: "live" }
 };
 
 function getCurrentPackages() { return currentService === "comentarios" ? COMMENTS_PACKAGES : STANDARD_PACKAGES; }
@@ -70,6 +73,36 @@ function load() {
   else if (baseInput) baseInput.value = (defaultCost[currentPlatform]?.[currentService] ?? 1.07).toFixed(2);
   if (marginSaved && marginInput) marginInput.value = marginSaved;
   else if (marginInput) marginInput.value = DEFAULT_MARGIN;
+}
+
+function saveCombo(comboData) {
+  localStorage.setItem('impulsa_combo', JSON.stringify(comboData));
+}
+
+function loadSavedCombo() {
+  const data = localStorage.getItem('impulsa_combo');
+  if (!data) return;
+  try {
+    const combo = JSON.parse(data);
+    const banner = document.getElementById('savedComboBanner');
+    document.getElementById('scbIcon').textContent = combo.emoji;
+    const nameEl = document.getElementById('scbName');
+    nameEl.innerHTML = `${combo.name} <span class="scb-plat">• ${combo.platform}</span>`;
+    document.getElementById('scbDiscount').textContent = combo.discount > 0 ? `${combo.discount}% OFF` : 'Sin descuento';
+    document.getElementById('scbTotal').textContent = combo.total;
+    let pillsHtml = '';
+    for (let s of combo.services) {
+      const clr = SVCCLR[s.id];
+      const rgb = hexToRgb(clr);
+      pillsHtml += `<span class="scb-svc-pill" style="background:rgba(${rgb},0.12);color:${clr};border:1px solid rgba(${rgb},0.3)">${s.qty.toLocaleString()} ${NAMES[s.id]}</span>`;
+    }
+    document.getElementById('scbServices').innerHTML = pillsHtml;
+    banner.classList.add('visible');
+  } catch (e) {}
+}
+
+function clearSavedCombo() {
+  localStorage.removeItem('impulsa_combo');
 }
 
 function getServiceBaseCost(svc) {
@@ -233,8 +266,8 @@ init();
 /* ══════════════════════════════════════════
    MODAL COMBO - LÓGICA
    ══════════════════════════════════════════ */
-const SVCCLR = { seguidores: '#ff3b6e', likes: '#ff7043', vistas: '#f5a623', comentarios: '#22d48a' };
-const NAMES = { seguidores: 'Seguidores', likes: 'Likes', vistas: 'Vistas', comentarios: 'Comentarios' };
+const SVCCLR = { seguidores: '#ff3b6e', likes: '#ff7043', vistas: '#f5a623', comentarios: '#22d48a', live: '#ff4444' };
+const NAMES = { seguidores: 'Seguidores', likes: 'Likes', vistas: 'Vistas', comentarios: 'Comentarios', live: 'Live' };
 
 let pickedSvcs = new Set();
 let customQtys = { seguidores: 1000, likes: 1000, vistas: 10000, comentarios: 50 };
@@ -479,10 +512,17 @@ function applyCombo() {
   void banner.offsetWidth;
   banner.classList.add('visible');
 
+  const comboData = {
+    name, emoji, platform: platName, discount: disc, total: totalText,
+    services: Array.from(pickedSvcs).map(s => ({ id: s, qty: qtys[s] || 1000 }))
+  };
+  saveCombo(comboData);
+
   closeComboModal();
 }
 
 function removeCombo() {
+  clearSavedCombo();
   const banner = document.getElementById('savedComboBanner');
   banner.style.transition = 'opacity 0.25s, transform 0.25s';
   banner.style.opacity = '0';
@@ -521,3 +561,48 @@ document.querySelectorAll('.service-item-vertical').forEach(item => {
     }
   });
 });
+
+// ══ HERRAMIENTAS - LIMPIADOR DE LINKS ══
+function scrollToTools() {
+  document.getElementById('toolsSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function clearUrlInput() {
+  document.getElementById('urlInput').value = '';
+  document.getElementById('urlOutput').style.display = 'none';
+}
+
+function cleanUrl() {
+  const input = document.getElementById('urlInput').value.trim();
+  if (!input) return;
+  let urlStr = input;
+  if (!urlStr.startsWith('http')) urlStr = 'https://' + urlStr;
+  try {
+    const url = new URL(urlStr);
+    const clean = url.origin + url.pathname.replace(/\/+$/, '');
+    document.getElementById('cleanUrlResult').textContent = clean;
+    document.getElementById('urlOutput').style.display = 'flex';
+  } catch (e) {
+    document.getElementById('cleanUrlResult').textContent = input.split('?')[0].split('#')[0];
+    document.getElementById('urlOutput').style.display = 'flex';
+  }
+}
+
+function copyCleanUrl() {
+  const result = document.getElementById('cleanUrlResult');
+  navigator.clipboard.writeText(result.textContent).then(() => {
+    const btn = document.querySelector('.tool-copy-main');
+    btn.innerHTML = '<i class="fas fa-check"></i> <span class="copy-text">¡Copiado!</span>';
+    btn.style.background = 'linear-gradient(135deg, rgba(76,175,80,0.3), rgba(76,175,80,0.15))';
+    btn.style.color = '#4caf50';
+    btn.style.borderColor = 'rgba(76,175,80,0.5)';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-copy"></i> <span class="copy-text">Copiar</span>';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 1500);
+  });
+}
+
+loadSavedCombo();
