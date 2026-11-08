@@ -20,7 +20,7 @@ const SERVICE_IDS = {
   },
   tiktok: {
     seguidores: "TT-FOL-4787",
-    likes: "TT-LIK-1801",
+    likes: "TT-LIK-2115",
     vistas: "TT-VWS-4202",
     comentarios: "TT-CMT-4251",
     live: "TT-LVE-3389"
@@ -603,6 +603,109 @@ function copyCleanUrl() {
       btn.style.borderColor = '';
     }, 1500);
   });
+}
+
+/* ══════════════════════════════════════════
+   COPIAR TEXTO FORMATEADO PARA PUBLICAR
+   (lista de precios lista para pegar en redes)
+   ══════════════════════════════════════════ */
+// Configuración del texto copiado según el servicio.
+// - quality: texto que aparece tras "Calidad:"
+// - icon: emoji de cada línea de precio
+// - headerEmoji: emoji al final del título
+// - quantities: cantidades que se listan (si se omite, usa las 3 primeras de la tabla)
+const COPY_CONFIG = {
+  seguidores:  { quality: 'Apariencia Real',   icon: '👥', headerEmoji: '⭐⭐', quantities: [100, 500, 1000] },
+  likes:       { quality: 'Calidad Premium',   icon: '❤️', headerEmoji: '⭐⭐', quantities: [100, 500, 1000] },
+  vistas:      { quality: 'Con retención',     icon: '🎬', headerEmoji: '👀', quantities: [1000, 5000, 10000] },
+  comentarios: { quality: 'Comentarios reales', icon: '💬', headerEmoji: '⭐⭐', quantities: [10, 20, 30] },
+  live:        { quality: 'Espectadores reales', icon: '📺', headerEmoji: '⭐⭐', quantities: [100, 500, 1000] }
+};
+
+// Convierte A-Z, a-z y 0-9 a "Mathematical Sans-Serif Bold" (𝗮𝘀𝗶́).
+function toBoldSans(text) {
+  const UPPER = 0x1D5D4, LOWER = 0x1D5EE, DIGIT = 0x1D7EC;
+  let out = '';
+  for (const ch of text) {
+    const code = ch.charCodeAt(0);
+    if (code >= 65 && code <= 90) out += String.fromCodePoint(UPPER + (code - 65));
+    else if (code >= 97 && code <= 122) out += String.fromCodePoint(LOWER + (code - 97));
+    else if (code >= 48 && code <= 57) out += String.fromCodePoint(DIGIT + (code - 48));
+    else out += ch;
+  }
+  return out;
+}
+
+// Cantidad con separador de miles estilo Bolivia: 1.000
+function formatQty(n) {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// Precio en Bs calculado con los mismos parámetros de la tabla.
+function getBsForQty(qty) {
+  const { base, margin } = getParams();
+  const cost = computeCost(base, qty);
+  const sale = computeSale(cost, margin);
+  return sale * USD_TO_BS;
+}
+
+// Arma el texto completo con los datos actuales (plataforma/servicio/precios).
+function buildPriceText() {
+  const platformName = currentPlatform === 'instagram' ? 'INSTAGRAM' : 'TIKTOK';
+  const serviceName = (serviceConfig[currentService]?.title || currentService).toUpperCase();
+  const cfg = COPY_CONFIG[currentService] || {};
+  const quality = cfg.quality || 'Calidad Premium';
+  const icon = cfg.icon || '👥';
+  const headerEmoji = cfg.headerEmoji || '⭐⭐';
+  const quantities = cfg.quantities || getCurrentPackages().slice(0, 3).map(p => p.cantidad);
+
+  const lines = quantities.map(qty => {
+    const price = Math.round(getBsForQty(qty));
+    return `${icon} ${formatQty(qty)} ➜ ${formatQty(price)} Bs`;
+  });
+
+  return [
+    `${toBoldSans(serviceName)} PARA ${toBoldSans(platformName)} ${headerEmoji}`,
+    '',
+    `🔥 ${toBoldSans('Calidad')}: ${quality}`,
+    '',
+    ...lines,
+    '',
+    '▬▬▬▬▬▬▬▬▬▬▬▬',
+    `💬 ${toBoldSans('Necesitas otra cantidad?')} 📩 Escríbenos y te cotizamos en minutos.`
+  ].join('\n');
+}
+
+async function copyPriceText() {
+  const text = buildPriceText();
+  const btn = document.getElementById('copyTextBtn');
+
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (e) {
+    // Fallback para navegadores/contextos sin Clipboard API
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (_) {}
+    document.body.removeChild(ta);
+  }
+
+  if (!btn) return;
+  const icon = btn.querySelector('i');
+  const label = btn.querySelector('.copy-label');
+  const originalLabel = label ? label.textContent : '';
+  btn.classList.add('copied');
+  if (icon) icon.className = 'fas fa-check';
+  if (label) label.textContent = '¡Copiado!';
+  setTimeout(() => {
+    btn.classList.remove('copied');
+    if (icon) icon.className = 'fas fa-copy';
+    if (label) label.textContent = originalLabel;
+  }, 1800);
 }
 
 loadSavedCombo();

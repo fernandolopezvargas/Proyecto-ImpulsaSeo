@@ -118,6 +118,12 @@
       </div>
     </div>
     <div class="table-card">
+      <div class="table-card-head">
+        <div class="panel-title-left"><i class="fas fa-table-list"></i> Lista de precios</div>
+        <button class="copy-text-btn" id="copyTextBtn" type="button" onclick="copyPriceText()">
+          <i class="fas fa-copy"></i><span class="copy-label">Copiar texto</span>
+        </button>
+      </div>
       <table class="price-table">
         <thead><tr><th>ID</th><th>CANTIDAD</th><th>COSTO</th><th>USD</th><th>BS</th></tr></thead>
         <tbody id="priceTableBody"></tbody>
