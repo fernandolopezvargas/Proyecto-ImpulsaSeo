@@ -149,6 +149,18 @@ function getParams() {
 function computeCost(b, q) { return (b / 1000) * q; }
 function computeSale(c, m) { return c * (1 + m / 100); }
 
+// Formato numérico único para toda la interfaz (es-BO: 1.234,56)
+function fmtNum(n, decimals = 2) {
+  const value = Number.isFinite(n) ? n : 0;
+  return value.toLocaleString('es-BO', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  });
+}
+function fmtQty(n) {
+  return Number(n).toLocaleString('es-BO');
+}
+
 function genId(suffix) {
   const plat = currentPlatform === "instagram" ? "IG" : "TT";
   const svc = currentService === "seguidores" ? "FOL" : currentService === "likes" ? "LIK" : currentService === "vistas" ? "VWS" : "CMT";
@@ -167,11 +179,23 @@ function renderTable() {
     const bs = sale * USD_TO_BS;
     const row = tbody.insertRow();
     const dynamicId = genId(p.idSuffix);
-    row.insertCell(0).innerHTML = `<span class="id-cell">${dynamicId}</span>`;
-    row.insertCell(1).innerHTML = `${p.cantidad.toLocaleString()}`;
-    row.insertCell(2).innerHTML = `$${cost.toFixed(2)}`;
-    row.insertCell(3).innerHTML = `$${sale.toFixed(2)}`;
-    row.insertCell(4).innerHTML = `<span class="bs-amount">${bs.toFixed(2)} Bs</span>`;
+
+    row.insertCell(0).innerHTML =
+      `<span class="qty-main">${fmtQty(p.cantidad)}</span>`;
+
+    const costCell = row.insertCell(1);
+    costCell.className = 'cost';
+    costCell.dataset.label = 'Costo';
+    costCell.innerHTML = `$${fmtNum(cost)}`;
+
+    const usdCell = row.insertCell(2);
+    usdCell.className = 'usd';
+    usdCell.dataset.label = 'Venta';
+    usdCell.innerHTML = `$${fmtNum(sale)}`;
+
+    row.insertCell(3).innerHTML =
+      `<span class="bs-amount">${fmtNum(bs)}<small>Bs</small></span>`;
+
     row.addEventListener('click', (function (clickedRow) {
       return function () {
         if (currentSelectedRow && currentSelectedRow !== clickedRow) currentSelectedRow.classList.remove('selected');
@@ -187,12 +211,21 @@ function updateKPI() {
   const cost1k = computeCost(base, 1000);
   const sale1k = computeSale(cost1k, margin);
   const profitUsd = sale1k - cost1k;
+  const saleBs = sale1k * USD_TO_BS;
   const profitBs = profitUsd * USD_TO_BS;
-  document.getElementById('kpiMainValue').innerHTML = `${profitBs.toFixed(2)} <span class="kpi-currency">Bs</span>`;
-  document.getElementById('kpiPercent').innerHTML = `+${margin}%`;
-  document.getElementById('detailCost').innerHTML = `$${cost1k.toFixed(2)}`;
-  document.getElementById('detailSale').innerHTML = `$${sale1k.toFixed(2)}`;
-  document.getElementById('detailProfit').innerHTML = `$${profitUsd.toFixed(2)}`;
+
+  document.getElementById('kpiMainValue').innerHTML =
+    `${fmtNum(saleBs)} <span class="kpi-currency">Bs</span>`;
+  document.getElementById('kpiPercent').innerHTML = `+${fmtNum(margin, 0)}%`;
+  document.getElementById('detailCost').innerHTML = `$${fmtNum(cost1k)}`;
+  document.getElementById('detailSale').innerHTML = `$${fmtNum(sale1k)}`;
+  document.getElementById('detailProfit').innerHTML = `$${fmtNum(profitUsd)}`;
+
+  const profitEl = document.getElementById('kpiProfitBs');
+  if (profitEl) profitEl.textContent = `${fmtNum(profitBs)} Bs`;
+
+  const ctx = document.getElementById('tableContext');
+  if (ctx) ctx.textContent = `Margen +${fmtNum(margin, 0)} % · Tasa ${fmtNum(USD_TO_BS)} Bs/$`;
 }
 
 function updateBadgeContent() {
@@ -251,7 +284,7 @@ async function fetchExchangeRate() {
       const venta = data[0].upper_whisker_sell;
       if (compra && venta) {
         USD_TO_BS = (compra + venta) / 2;
-        document.getElementById('rateValue').textContent = `$1 USD = ${USD_TO_BS.toFixed(2)} Bs`;
+        document.getElementById('rateValue').textContent = `$1 USD = ${fmtNum(USD_TO_BS)} Bs`;
         refresh();
       }
     }

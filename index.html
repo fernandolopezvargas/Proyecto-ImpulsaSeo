@@ -90,46 +90,65 @@
     <div class="badge-id-tag" id="badgeId" onclick="copyServiceId()" title="Click para copiar">IG-LIK-5350</div>
   </div>
 
-  <div class="dashboard-grid">
-    <div class="params-card">
-      <div class="panel-header">
-        <div class="panel-title-left"><i class="fas fa-calculator"></i> Calculadora</div>
+  <section class="calc-panel">
+    <div class="calc-fields">
+      <label class="field">
+        <span class="field-label">Costo por 1.000</span>
+        <span class="field-control has-prefix">
+          <span class="field-prefix">$</span>
+          <input type="number" id="baseCostPerThousand" class="premium-input" step="0.01" inputmode="decimal" placeholder="1.07">
+        </span>
+      </label>
+      <label class="field">
+        <span class="field-label">Margen de ganancia</span>
+        <span class="field-control has-suffix">
+          <input type="number" id="profitMarginPercent" class="premium-input" step="1" inputmode="numeric" placeholder="250">
+          <span class="field-suffix">%</span>
+        </span>
+      </label>
+      <div class="field">
+        <span class="field-label">Tipo de cambio</span>
         <div class="rate-badge" id="rateBadge">
-          <span><strong id="rateValue">$1 USD = 10.00 Bs</strong></span>
-        </div>
-      </div>
-      <div class="input-row-group">
-        <div class="input-row">
-          <input type="number" id="baseCostPerThousand" class="premium-input" step="0.01" placeholder="Costo de 1,000($)">
-        </div>
-        <div class="input-row">
-          <input type="number" id="profitMarginPercent" class="premium-input" step="1" placeholder="% de ganancia">
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-header-row">
-          <span class="kpi-label">GANANCIA POR 1,000 $</span>
-          <div class="kpi-percent-badge" id="kpiPercent">+250%</div>
-        </div>
-        <div class="kpi-main-value" id="kpiMainValue">27 <span class="kpi-currency">Bs</span></div>
-        <div class="kpi-detail" id="kpiDetail">
-          Costo <span id="detailCost">$1.07</span> → Venta <span id="detailSale">$3.76</span> → Ganancia <span id="detailProfit">$2.69</span>
+          <span class="rate-live"></span>
+          <strong id="rateValue">$1 USD = 10,00 Bs</strong>
         </div>
       </div>
     </div>
-    <div class="table-card">
-      <div class="table-card-head">
+
+    <div class="kpi-card">
+      <div class="kpi-header-row">
+        <span class="kpi-label">Precio de venta · 1.000</span>
+        <div class="kpi-percent-badge" id="kpiPercent">+250%</div>
+      </div>
+      <div class="kpi-main-value" id="kpiMainValue">45,04 <span class="kpi-currency">Bs</span></div>
+      <div class="kpi-profit"><i class="fas fa-arrow-trend-up"></i> Ganas <span id="kpiProfitBs">32,17 Bs</span></div>
+      <div class="kpi-detail">
+        Costo <span id="detailCost">$1,07</span> · Venta <span id="detailSale">$3,75</span> · Ganancia <span id="detailProfit">$2,67</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="table-card">
+    <div class="table-card-head">
+      <div class="table-title-wrap">
         <div class="panel-title-left"><i class="fas fa-table-list"></i> Lista de precios</div>
-        <button class="copy-text-btn" id="copyTextBtn" type="button" onclick="copyPriceText()">
-          <i class="fas fa-copy"></i><span class="copy-label">Copiar texto</span>
-        </button>
+        <span class="table-context" id="tableContext">Margen +250 % · Tasa 12,03 Bs/$</span>
       </div>
-      <table class="price-table">
-        <thead><tr><th>ID</th><th>CANTIDAD</th><th>COSTO</th><th>USD</th><th>BS</th></tr></thead>
-        <tbody id="priceTableBody"></tbody>
-      </table>
+      <button class="copy-text-btn" id="copyTextBtn" type="button" onclick="copyPriceText()">
+        <i class="fas fa-copy"></i><span class="copy-label">Copiar texto</span>
+      </button>
     </div>
-  </div>
+    <table class="price-table">
+      <thead>
+        <tr><th>CANTIDAD</th><th>COSTO</th><th>VENTA USD</th><th>PRECIO (BS)</th></tr>
+      </thead>
+      <tbody id="priceTableBody"></tbody>
+    </table>
+    <div class="table-foot">
+      <span><i class="fas fa-hand-pointer"></i> Toca una fila para marcarla.</span>
+      <span>Los precios se recalculan al instante.</span>
+    </div>
+  </section>
 
   <div class="tools-section" id="toolsSection">
     <div class="panel-header">
