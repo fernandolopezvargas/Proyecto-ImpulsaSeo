@@ -171,16 +171,10 @@ body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; mi
   padding: 0.85rem 1.1rem;
   margin: 0 0 1.1rem 0;
   background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015));
+  border-bottom: 1px solid var(--svc);
   border-radius: 0;
   position: relative;
   overflow: hidden;
-}
-.service-badge-container::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--svc);
 }
 .service-badge-container.seguidores { --svc: #5a9eff; --svc-soft: rgba(90,158,255,0.14); --svc-line: rgba(90,158,255,0.3); }
 .service-badge-container.likes { --svc: #ff6b8a; --svc-soft: rgba(255,107,138,0.14); --svc-line: rgba(255,107,138,0.3); }
@@ -221,13 +215,37 @@ body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; mi
   grid-template-columns: minmax(0, 1fr) minmax(250px, 320px);
   gap: 1rem;
   align-items: stretch;
-  padding: 1rem;
+  padding: 1.2rem;
   margin-bottom: 1.1rem;
-  background: rgba(17, 21, 31, 0.92);
-  border: 1px solid rgba(255,255,255,0.07);
+  background-image:
+    linear-gradient(135deg, rgba(10, 13, 20, 0.88) 0%, rgba(10, 13, 20, 0.6) 40%, rgba(10, 13, 20, 0.45) 60%, rgba(10, 13, 20, 0.75) 100%),
+    url('img/tokio.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(0,0,0,0.3);
   border-radius: 18px;
-  box-shadow: 0 20px 45px -30px rgba(0,0,0,0.9);
+  box-shadow:
+    0 20px 45px -30px rgba(0,0,0,0.9),
+    0 0 0 1px rgba(255,255,255,0.04),
+    inset 0 1px 0 rgba(255,255,255,0.06);
   min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+.calc-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 0% 50%, rgba(228,64,95,0.08), transparent),
+    radial-gradient(ellipse 50% 70% at 100% 50%, rgba(34,212,138,0.06), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+.calc-panel > * {
+  position: relative;
+  z-index: 1;
 }
 .calc-fields {
   display: grid;
@@ -235,12 +253,19 @@ body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; mi
   gap: 0.7rem;
   align-content: center;
   min-width: 0;
+  background: rgba(11, 14, 22, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 0.85rem;
 }
 .field { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
 .field-label {
   font-size: 0.62rem; font-weight: 700;
   letter-spacing: 0.1em; text-transform: uppercase;
-  color: #7c8db0;
+  color: #9bb0d0;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 .field-control { position: relative; display: flex; align-items: center; }
 .field-prefix, .field-suffix {
@@ -259,8 +284,8 @@ body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; mi
 .premium-input {
   width: 100%;
   min-width: 0;
-  background: #0b0e16;
-  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(11, 14, 22, 0.85);
+  border: 1px solid rgba(255,255,255,0.12);
   padding: 0.65rem 0.85rem;
   border-radius: 11px;
   font-family: 'JetBrains Mono', monospace;
@@ -279,8 +304,8 @@ body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; mi
   display: flex; align-items: center; gap: 0.5rem;
   min-height: 38px;
   padding: 0 0.85rem;
-  background: #0b0e16;
-  border: 1px solid rgba(255,255,255,0.09);
+  background: rgba(11, 14, 22, 0.85);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 11px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
@@ -303,11 +328,14 @@ body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; mi
   gap: 0.3rem;
   padding: 0.85rem 1rem;
   background:
-    radial-gradient(120% 140% at 100% 0%, rgba(34,212,138,0.1), transparent 55%),
-    #0b0e16;
-  border: 1px solid rgba(255,255,255,0.08);
+    radial-gradient(120% 140% at 100% 0%, rgba(34,212,138,0.12), transparent 55%),
+    rgba(11, 14, 22, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 14px;
   min-width: 0;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
 .kpi-header-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
 .kpi-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #93a4c3; }
@@ -334,11 +362,11 @@ body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; mi
 .kpi-currency { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; color: #93a4c3; letter-spacing: 0; }
 .kpi-profit {
   display: inline-flex; align-items: center; gap: 0.35rem;
-  font-size: 0.7rem; font-weight: 600; color: #7fd6b0;
+  font-size: 0.7rem; font-weight: 600; color: #e0e8f5;
   width: fit-content;
 }
-.kpi-profit i { font-size: 0.65rem; }
-.kpi-profit span { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #22d48a; }
+.kpi-profit i { font-size: 0.65rem; color: #00ff81; }
+.kpi-profit span { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #00ff81; }
 .kpi-detail {
   margin-top: 0.25rem; padding-top: 0.4rem;
   border-top: 1px dashed rgba(255,255,255,0.09);
@@ -391,7 +419,7 @@ body { background: #0a0d14; font-family: 'Inter', sans-serif; color: #eef2ff; mi
   transition: all 0.15s ease;
 }
 .copy-text-btn i { font-size: 0.75rem; }
-.copy-text-btn:hover { color: #fff; background: rgba(228,64,95,0.16); border-color: rgba(228,64,95,0.4); }
+.copy-text-btn:hover { color: #eef2ff; background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.2); }
 .copy-text-btn.copied { color: #22d48a; background: rgba(34,212,138,0.12); border-color: rgba(34,212,138,0.35); }
 
 .id-tag-badge {

@@ -12,7 +12,7 @@ let currentSelectedRow = null;
 
 const SERVICE_IDS = {
   instagram: {
-    seguidores: "IG-FOL-641",
+    seguidores: "IG-FOL-5978",
     likes: "IG-LIK-5350",
     vistas: "IG-VWS-3844",
     comentarios: "IG-CMT-5493",
