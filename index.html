@@ -153,17 +153,36 @@
   <div class="tools-section" id="toolsSection">
     <div class="panel-header">
       <div class="panel-title-left"><i class="fas fa-broom"></i> Limpiador de Links</div>
-    </div>
-    <div class="tools-row">
-      <input type="text" id="urlInput" class="premium-input" placeholder="Pega tu link de Instagram o TikTok aquí...">
-      <div class="tools-btns">
-        <button class="tool-clear-btn" onclick="clearUrlInput()"><i class="fas fa-xmark"></i></button>
-        <button class="tool-btn-main" onclick="cleanUrl()"><i class="fas fa-wand-magic-sparkles"></i> Limpiar</button>
+      <div class="tools-badges">
+        <span class="tool-platform-pill"><i class="fab fa-instagram"></i> Instagram</span>
+        <span class="tool-platform-pill"><i class="fab fa-tiktok"></i> TikTok</span>
       </div>
     </div>
+    <div class="tools-row">
+      <div class="tools-input-wrap" id="urlInputWrap">
+        <i class="fas fa-link tools-input-icon" aria-hidden="true"></i>
+        <input type="text" id="urlInput" class="premium-input tools-input" placeholder="Pega tu link de Instagram o TikTok aquí..." autocomplete="off" spellcheck="false">
+        <button type="button" class="input-clear-btn" onclick="clearUrlInput()" title="Borrar link" aria-label="Borrar link">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <button type="button" class="tool-btn-main" onclick="cleanUrl()">
+        <i class="fas fa-wand-magic-sparkles"></i>
+        <span>Limpiar</span>
+      </button>
+    </div>
     <div class="tool-output-main" id="urlOutput" style="display:none;">
-      <div class="tool-result" id="cleanUrlResult"></div>
-      <button class="tool-copy-main" onclick="copyCleanUrl()"><i class="fas fa-copy"></i> <span class="copy-text">Copiar</span></button>
+      <div class="tool-output-card">
+        <div class="tool-output-meta">
+          <i class="fas fa-circle-check"></i>
+          <span id="urlOutputMeta">Link limpio</span>
+        </div>
+        <div class="tool-result" id="cleanUrlResult"></div>
+        <button type="button" class="tool-copy-main" id="copyCleanBtn" onclick="copyCleanUrl()">
+          <i class="fas fa-copy"></i>
+          <span class="copy-text">Copiar</span>
+        </button>
+      </div>
     </div>
   </div>
 

@@ -600,9 +600,19 @@ function scrollToTools() {
   document.getElementById('toolsSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
+function updateUrlInputState() {
+  const input = document.getElementById('urlInput');
+  const wrap = document.getElementById('urlInputWrap');
+  if (!input || !wrap) return;
+  wrap.classList.toggle('has-value', input.value.trim().length > 0);
+}
+
 function clearUrlInput() {
-  document.getElementById('urlInput').value = '';
+  const input = document.getElementById('urlInput');
+  input.value = '';
   document.getElementById('urlOutput').style.display = 'none';
+  updateUrlInputState();
+  input.focus();
 }
 
 function cleanUrl() {
@@ -610,33 +620,55 @@ function cleanUrl() {
   if (!input) return;
   let urlStr = input;
   if (!urlStr.startsWith('http')) urlStr = 'https://' + urlStr;
+
+  let clean = '';
+  let removedCount = 0;
   try {
     const url = new URL(urlStr);
-    const clean = url.origin + url.pathname.replace(/\/+$/, '');
-    document.getElementById('cleanUrlResult').textContent = clean;
-    document.getElementById('urlOutput').style.display = 'flex';
+    removedCount = Array.from(url.searchParams.keys()).length + (url.hash ? 1 : 0);
+    clean = url.origin + url.pathname.replace(/\/+$/, '');
   } catch (e) {
-    document.getElementById('cleanUrlResult').textContent = input.split('?')[0].split('#')[0];
-    document.getElementById('urlOutput').style.display = 'flex';
+    clean = input.split('?')[0].split('#')[0];
   }
+
+  document.getElementById('cleanUrlResult').textContent = clean;
+  const meta = document.getElementById('urlOutputMeta');
+  if (meta) {
+    meta.textContent = removedCount > 0
+      ? `${removedCount} ${removedCount === 1 ? 'parámetro eliminado' : 'parámetros eliminados'}`
+      : 'Link limpio';
+  }
+  document.getElementById('urlOutput').style.display = 'block';
 }
 
 function copyCleanUrl() {
   const result = document.getElementById('cleanUrlResult');
+  const btn = document.getElementById('copyCleanBtn');
+  if (!result || !btn) return;
+
   navigator.clipboard.writeText(result.textContent).then(() => {
-    const btn = document.querySelector('.tool-copy-main');
+    btn.classList.add('copied');
     btn.innerHTML = '<i class="fas fa-check"></i> <span class="copy-text">¡Copiado!</span>';
-    btn.style.background = 'linear-gradient(135deg, rgba(76,175,80,0.3), rgba(76,175,80,0.15))';
-    btn.style.color = '#4caf50';
-    btn.style.borderColor = 'rgba(76,175,80,0.5)';
     setTimeout(() => {
+      btn.classList.remove('copied');
       btn.innerHTML = '<i class="fas fa-copy"></i> <span class="copy-text">Copiar</span>';
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.style.borderColor = '';
     }, 1500);
   });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const urlInput = document.getElementById('urlInput');
+  if (urlInput) {
+    urlInput.addEventListener('input', updateUrlInputState);
+    urlInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        cleanUrl();
+      }
+    });
+    updateUrlInputState();
+  }
+});
 
 /* ══════════════════════════════════════════
    COPIAR TEXTO FORMATEADO PARA PUBLICAR
